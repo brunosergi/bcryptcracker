@@ -1,0 +1,4 @@
+pwntools==4.5.1
+termcolor==1.1.0
+pwn==1.0
+python_bcrypt==0.3.2
