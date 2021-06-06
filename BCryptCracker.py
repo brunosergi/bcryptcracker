@@ -52,18 +52,21 @@ def prepareDictionary(dictionary):
     sys.exit(1)
 
 def crackHash(passwords):
-  p1 = log.progress("")
-  p1.status("Starting the Hash Cracking...")
+  process = log.progress("")
+  process.status("Starting the Hash Cracking...")
   time.sleep(2)
   for password in passwords:
     bcrypt_pass = password.encode('ascii','ignore')
     passed = str(base64.b64encode(bcrypt_pass))
     hash_and_salt = bcrypt.hashpw(passed.encode(), salt)
-    p1.status(f"Testing with the password: {password}")
+    process.status(f"Testing with the password: {password}")
     if ( hash_and_salt == myhash ):
-      p1.success(colored(f"Password Found: {password}", "green"))
+      process.success(colored(f"Password Found: {password}", "green"))
       print(f"\nTotal elapsed time: {int(time.time() - start_time)} seconds")
       sys.exit(0)
+  process.failure(colored("Password Not Found.", "red"))
+  print(f"\nTotal elapsed time: {int(time.time() - start_time)} seconds")
+  sys.exit(1)
 
 def main():
   try:
