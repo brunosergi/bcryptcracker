@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-#coding: utf-8
-############################################################
+########################USAGE###############################
 # How to use:
 # 1. Replace the 'hash' and the 'salt' bellow
 # 2. Call it like this:
-# Eg. root@Kali:~# ./BCryptCracker.py rockyou.txt
-# Eg. root@Kali:~# python3 BCryptCracker.py rockyou.txt
+# Eg. root@Kali:~# ./bcryptcracker.py rockyou.txt
+# Eg. root@Kali:~# python3 bcryptcracker.py rockyou.txt
 ############################################################
 
+import os
 import time
 import bcrypt
 import base64
@@ -24,31 +24,43 @@ myhash = b'$2b$12$SVInH5XmuS3C7eQkmqa6UOM6sDIuumJPrvuiTr.Lbz3GCcUqdf.z6'
 start_time = time.time()
 
 def keyHandler(sig, frame):
-    print(colored("\n[!] Ctrl + C pressed. Program ended...\n", "red"))
-    print(f"Total elapsed time: {int(time.time() - start_time)} seconds")
-    sys.exit(1)
+  log.failure(colored("Ctrl + C pressed. Program ended...\n", "red"))
+  print(f"Total elapsed time: {int(time.time() - start_time)} seconds")
+  sys.exit(1)
 signal.signal(signal.SIGINT, keyHandler)
 
 def usageHint():
-    print('''
-    How to use:
-    1. Open the code and replace the 'hash' and 'salt' values 
-    2. Run the code specifying the password dictionary, like this:
-    Eg. root@Kali:~# ./BCryptCracker.py rockyou.txt
-    Eg. root@Kali:~# python3 BCryptCracker.py rockyou.txt
+  log.failure(colored("How to use:", "red"))
+  print('''
+1. Open the code and replace the 'hash' and 'salt' values 
+2. Run the code specifying the password wordlist, like this:
+Eg. root@Kali:~# ./bcryptcracker.py rockyou.txt
+Eg. root@Kali:~# python3 bcryptcracker.py rockyou.txt
 
-    If the hash matches a password that is in the dictionary, it will find.
-    ''')
+If the hash matches a password that is in the wordlist, it will find.
+  ''',)
 
-def prepareDictionary(dictionary):
+def showBanner():
+  print("""
+   __                     __       
+  / /  __________ _____  / /_      
+ / _ \/ __/ __/ // / _ \/ __/      
+/_.__/\__/_/  \_, / .__/\__/       
+  ________  _/___/_/____ _________ 
+ / ___/ _ \/ _ |/ ___/ //_/ __/ _ \\
+/ /__/ , _/ __ / /__/ ,< / _// , _/
+\___/_/|_/_/ |_\___/_/|_/___/_/|_|                                                                                       
+  """)
+
+def prepareWordlist(dictionary):
   try:
-    dictionary = open (dictionary).read().splitlines()
+    dictionary = open (dictionary, 'r').read().splitlines()
     passwords = []
     for word in dictionary:
       passwords.append(word)
     return passwords
   except Exception:
-    print (colored("\n[!] Dictionary not found.\n", "yellow"))
+    log.failure(colored("Wordlist not found.\n", "red"))
     sys.exit(1)
 
 def crackHash(passwords):
@@ -71,11 +83,12 @@ def crackHash(passwords):
 def main():
   try:
     if len(sys.argv) > 2 or len(sys.argv) < 2:
-        usageHint()
+      usageHint()
     else:
-        dictionary = sys.argv[1]
-        passwords = prepareDictionary(dictionary)
-        crackHash(passwords)
+      dictionary = sys.argv[1]
+      passwords = prepareWordlist(dictionary)
+      showBanner()
+      crackHash(passwords)
   except Exception as e:
     log.error(str(e))
 
