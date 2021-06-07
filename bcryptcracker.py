@@ -7,7 +7,6 @@
 # Eg. root@Kali:~# python3 bcryptcracker.py rockyou.txt
 ############################################################
 
-import os
 import time
 import bcrypt
 import base64
